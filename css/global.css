@@ -1,0 +1,38 @@
+html, body {
+	font-family: 'Roboto', 'Sawasdee', "Segoe UI", sans-serif;
+	margin: 0px; padding: 0px;
+	background: url('../img/bg.png');
+	background-repeat: repeat;
+	background-color: rgb(40,40,40);
+
+	position: relative;
+	height: 100%;
+	color: white;
+	overflow: hidden;
+}
+
+a.styled_link {
+	display: inline-block;
+	color: inherit;
+	text-decoration: none;
+	border: 2px solid white;
+	border-radius: 4px;
+	padding: 1px 3px;
+}
+
+.inputwithimg {
+	position: relative;
+}
+.inputwithimg > img {
+	position: absolute;
+	right: 25px;
+	top: 6px;
+	height: 25px;
+	pointer-events: none;
+}
+
+
+@keyframes sawspin {
+	1% { transform: rotate(0deg); }
+	100% {transform: rotate(-359deg); }
+}

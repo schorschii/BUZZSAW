@@ -1,0 +1,24 @@
+v0.0.3
+- [new] update notification
+- [new] scan doesn't truncate tables anymore - it updates already existing tracks, so playlists don't get lost anymore
+
+v0.0.2
+- [new] improved visualizer (smoother color gradient, performance optimizations)
+- [new] support for multiple visualizers which can be switched while playback is running
+- [new] semi-transparent background for libraray (better legibility if a video is running in the background)
+- [fix] visualizer not running anymore in the background when a video is running (performance optimization)
+- [fix] Space key event (play/pause player) not fired anymore if prev/play/pause/next or search text box is focused
+- [fix] non-playable files are not shown anymore in library "files" tab
+- [fix] empty album popup (with album text/image) not shown anymore if album name is unknown
+- [new] Ctrl+F and F3 now focuses the library search textbox (does not open the browsers search bar anymore)
+- [new] visualizer and remote player selection are now next to the download button in the current playlist view
+- [new] general GUI optimizations and GUI optimizations for iOS devices
+- [new] fullscreen button
+- initial GitHub commit (first public version)
+
+v0.0.1
+- [fix] box-reflect on album cover now working in Chrome 60+
+- [new] library view "files": select tracks by browsing the directory structure
+- [fix] freezes caused by long running scripts (music.php, scan.php) which do not release the php session file lock
+- [new] add tracks to playlist by browsing albums and artists, not only tracks
+- [new] basic video support (.mp4)

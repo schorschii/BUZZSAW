@@ -1,0 +1,54 @@
+.tooltip {
+	position: relative;
+}
+.tooltip .tooltipcontent {
+	pointer-events: none; opacity: 0;
+	display: inline-block;
+	width: 400px;
+	background-color: #555;
+	color: #fff;
+	text-align: center;
+	border-radius: 4px;
+	position: absolute;
+	padding: 0px;
+	z-index: 1;
+	bottom: 115%;
+	left: 50%;
+	margin-left: -200px;
+	transition: opacity 0.6s, bottom 0.6s;
+	box-shadow: 0px 0px 8px rgba(0,0,0,0.9);
+}
+.tooltip .tooltipcontent::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -10px;
+	border-width: 10px;
+	border-style: solid;
+	border-color: #555 transparent transparent transparent;
+}
+.tooltip:hover .tooltipcontent {
+	opacity: 1;
+	bottom: 120%;
+}
+.tooltip .tooltipcontent #albumimgDetails img {
+	padding: 0px; margin: 0px;
+	border-radius: 4px 4px 0px 0px;
+	max-width: 400px;
+	box-shadow: 0px 2px 8px -4px rgba(0,0,0,0.8);
+}
+.tooltip .tooltipcontent .textcontainer img {
+	vertical-align: middle;
+	height: 18px;
+	margin-right: 8px;
+}
+.tooltip .tooltipcontent .textcontainer #titleTitleDetails {
+	font-weight: bold;
+}
+.tooltip .textcontainer {
+	margin: 0px 10px;
+	max-width: 400px;
+	overflow: hidden;
+	padding: 5px 0px 5px 0px;
+}

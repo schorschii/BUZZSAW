@@ -1,0 +1,241 @@
+.list {
+	margin: 0px; padding: 0px;
+}
+.list > li {
+	list-style-type: none;
+}
+.list > li > a {
+	padding: 15px 10px;
+	display: block;
+	color: inherit;
+	text-decoration: none;
+	transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.list > li > a:hover {
+	background-color: rgba(255,255,255,0.2);
+}
+.list > li > a:active {
+	transform: scale(0.95);
+}
+.list > li:last-child {
+	border: none;
+}
+.list a.track.active {
+	background-color: white;
+	color: rgb(40,40,40);
+}
+.list > li.option img {
+	height: 22px;
+	margin-top: -3px;
+	margin-right: 4px;
+	vertical-align: middle;
+}
+#license {
+	font-family: monospace;
+	white-space: pre;
+}
+.list #aboutLogo {
+	height: 64px;
+	float: left;
+	margin-right: 8px;
+}
+p {
+	margin: 14px 0px;
+}
+p:first-child {
+	margin-top: 0px;
+}
+p:last-child {
+	margin-bottom: 0px;
+}
+@media (min-width: 750px) {
+	.list > li:not(.tracklisting) {
+		display: inline-block;
+		width: 50%;
+	}
+}
+@media (min-width: 1000px) {
+	.list > li:not(.tracklisting)  {
+		display: inline-block;
+		width: 33.3%;
+	}
+}
+@media (min-width: 1250px) {
+	.list > li:not(.tracklisting)  {
+		display: inline-block;
+		width: 25%;
+	}
+}
+@media (min-width: 1500px) {
+	.list > li:not(.tracklisting)  {
+		display: inline-block;
+		width: 20%;
+	}
+}
+@media (min-width: 1750px) {
+	.list > li:not(.tracklisting)  {
+		display: inline-block;
+		width: 16.6%;
+	}
+}
+
+#libraryViewModeBar {
+	border-radius: 5px;
+	display: inline-table;
+	vertical-align: middle;
+}
+#libraryViewModeBar td {
+	color: white;
+	font-weight: bold;
+	text-align: center;
+	padding: 0px;
+}
+#libraryViewModeBar img {
+	vertical-align: middle;
+}
+#libraryViewModeBar a {
+	color: inherit;
+	text-decoration: none;
+	padding: 5px 15px;
+	min-width: 60px;
+	display: inline-block;
+	transition: background-color 0.2s ease, transform 0.1s ease;
+}
+#libraryViewModeBar a:hover {
+	background-color: rgba(255,255,255,0.2);
+}
+#libraryViewModeBar a.active {
+	background-color: white;
+	color: rgb(40,40,40);
+}
+
+.cover_libraray {
+	vertical-align: middle;
+	height: 45px;
+	margin-right: 8px;
+}
+.cover_libraray:not(.unknown) {
+	border: 1px solid white;
+}
+.artistimg_libraray {
+	vertical-align: middle;
+	height: 45px; width: 45px;
+	margin-right: 8px;
+}
+.artistimg_libraray:not(.unknown) {
+	border: 1px solid white;
+	border-radius: 50%;
+}
+.cover_big {
+	vertical-align: middle;
+	max-height: 100px;
+	margin-right: 8px;
+}
+.cover_big:not(.unknown) {
+	border: 1px solid white;
+}
+.albumdescription {
+	display: inline-block;
+	vertical-align:middle;
+}
+
+.track_number {
+	font-weight: bold;
+	padding-right: 8px;
+}
+.special_link {
+	font-weight: bold;
+	font-variant: small-caps;
+	letter-spacing: 1px;
+}
+
+.about {
+	padding: 15px 10px;
+	font-size: 90%;
+	color: rgb(40,40,40);
+	background-color: white;
+	overflow: auto;
+	white-space: nowrap;
+}
+
+#searchContainer {
+	float: right;
+	display: inline-block;
+	vertical-align: middle;
+}
+#searchContainer > img {
+	right: 8px;
+	top: 8px;
+	height: 19px;
+}
+#search {
+	font-size: 120%;
+	width: 100%;
+	box-sizing: border-box;
+}
+@media (max-width: 850px) {
+	#searchContainer {
+		float: none;
+		display: block;
+		margin: 5px 0px;
+	}
+}
+
+.playlistOptions {
+	margin-bottom: 10px;
+}
+.playlistOptions > * {
+	margin-left: 5px;
+}
+.playlistOptions > *:first-child {
+	margin-left: 0px;
+}
+.playlist_title {
+	font-weight: bold;
+}
+.playlist_abort {
+	font-weight: bold;
+	float: right;
+	text-decoration: none;
+	color: red;
+}
+
+.right {
+	float: right;
+}
+
+.inlistinfo {
+	margin-bottom: 10px;
+}
+
+.btnAdd {
+	background-image: url('../img/plus.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+.btnRemove {
+	background-image: url('../img/minus.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+.btnMoveUp {
+	background-image: url('../img/up.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+.btnMoveDown {
+	background-image: url('../img/down.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+.btnPadding {
+	background-position: 10px center;
+	padding-left: 50px;
+	padding-right: 10px;
+	width: auto;
+}

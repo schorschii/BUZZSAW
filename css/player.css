@@ -1,0 +1,494 @@
+#logocontainer {
+	position: absolute;
+	bottom: -120px; left: 0px; right: 0px;
+	text-align: center;
+}
+#logo {
+	height: 340px; width: 340px;
+	box-sizing: border-box;
+	/*animation: sawspin 110s linear 0s infinite;*/ /* high cpu load */
+}
+.blur {
+	opacity: 0.25;
+}
+
+#mainPlayer {
+	display: inline-block;
+	position: absolute;
+	width: 100%; height: 100%;
+}
+#mainPlayer.videoactive {
+	background-color: black;
+}
+#mainPlayer.videoactive.blur {
+	opacity: 1;
+	filter: blur(15px);
+}
+
+#contentbg {
+	position: absolute;
+	top: 0px; bottom: 0px; left: 0px; right: 0px;
+}
+#contentbg.active {
+	background-color: rgba(0,0,0,0.4);
+	background: linear-gradient(to right, rgba(0,0,0,0.6) 25%,
+										  rgba(0,0,0,0.2) 45%,
+										  rgba(0,0,0,0.2) 55%,
+										  rgba(0,0,0,0.6) 75%);
+}
+#content, #currentPlaylist {
+	position: absolute;
+	bottom: 169px; top: 85px; left: 0px; right: 0px;
+	overflow: hidden;
+	padding: 0px 20px;
+	/*box-shadow: inset 0px -30px 25px -25px rgba(0,0,0,0.6), inset 0px 30px 25px -25px rgba(0,0,0,0.6);*/
+}
+#content > *, #currentPlaylist > * {
+	overflow: auto;
+	height: 100%;
+}
+
+/* all elements at the bottom of the player */
+#bottombar.videoactive,
+#menu.videoactive {
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out;
+}
+#bottombar:hover,
+#menu:hover {
+	opacity: 1;
+}
+#bottombar.videoactive #titleDetails {
+	display: none;
+}
+
+/* bar with title, controls, timebar and time labels on bottom */
+#controlbar {
+	position: absolute;
+	bottom: 0px; left: 0px; right: 0px;
+	padding: 20px 20px 25px 20px;
+	width: 100%;
+	background-color: rgba(0,0,0,0.4);
+	background: linear-gradient(to right, rgba(0,0,0,0.6) 25%,
+	                                      rgba(0,0,0,0.2) 45%,
+	                                      rgba(0,0,0,0.2) 55%,
+	                                      rgba(0,0,0,0.6) 75%);
+}
+#controlbar * {
+	cursor: default;
+}
+
+/* displays artist and title */
+#title {
+	width: 40%;
+	text-align: left;
+	font-size: 30px;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+#titleArtist {
+	font-weight: bold;
+}
+
+/* time labels */
+#time {
+	width: 40%;
+	text-align: right;
+}
+#currentTime {
+	font-size: 80px;
+	font-weight: 100;
+}
+#timeSeconds, #timeSecondsTotal {
+	color: rgb(17,217,69);
+}
+#totalTime {
+	font-size: 20px;
+	font-weight: 300;
+	opacity: 0.6;
+}
+#albumimgperspective {
+	display: inline;
+	float: right;
+	margin-left: 15px;
+	vertical-align: middle;
+	perspective: 200px;
+}
+#albumimg {
+	transform: rotateY(-18deg);
+}
+#albumimg img {
+	min-height: 100px; min-width: 100px; max-height: 100px;
+	-webkit-box-reflect: below 0px -webkit-linear-gradient(top, rgba(0,0,0,0) 80%,rgba(255,255,255,0.6) 100%);
+	filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.4));
+	outline: 1px solid transparent;
+}
+
+/* timeline */
+#timeBar {
+	position: absolute;
+	bottom: 0px; left: 0px; right: 0px;
+	height: 24px;
+}
+#timeBarBackground {
+	position: absolute;
+	top: 0px; bottom: 0px; left: 10px; right: 10px;
+}
+#timeBarCurrentRightEdge, #timeBarBackground {
+	background-color: rgb(18,18,18);
+	background: linear-gradient(to top, rgb(19,19,19), rgb(14,14,14));
+}
+#timeBarCurrentLeftEdge, #timeBarCurrentIndicator {
+	background-color: rgb(282,283,284);
+	background: linear-gradient(to top, rgb(148,149,150), rgb(224,225,226));
+}
+#timeBarCurrentLeftEdge {
+	position: absolute;
+	top: 0px; bottom: 0px; left: 2px;
+	width: 10px;
+	border-radius: 1000px 0px 0px 1000px;
+}
+#timeBarCurrentRightEdge {
+	position: absolute;
+	top: 0px; bottom: 0px; right: 2px;
+	width: 10px;
+	border-radius: 0px 1000px 1000px 0px;
+}
+#timeBarCurrentIndicator {
+	position: absolute;
+	top: 0px; bottom: 0px; left: 0px; right: 0px;
+	transition: width 0.2s linear;
+}
+
+/* input */
+.inputtbl th > * {
+	vertical-align: middle;
+}
+.inputtbl th > img {
+	max-height: 24px;
+	max-width: 24px;
+	margin-right: 8px;
+}
+input[type=text], input[type=submit], select, button:not(.roundButton) {
+	font-family: inherit;
+	font-size: 120%;
+	box-sizing: border-box;
+	color: white;
+	background-color: transparent;
+	border: 2px solid white;
+	border-radius: 8px;
+	outline: none;
+	padding: 5px 7px;
+	min-height: 40px;
+	min-width: 170px;
+}
+select > option {
+	color: white;
+	background-color: rgb(40,40,40);
+}
+input[type=submit], button:not(.roundButton) {
+	font-weight: bold;
+	cursor: pointer;
+	width: auto;
+	transition: transform 0.1s ease;
+}
+input[type=submit]:active, button:not(.roundButton):active {
+	transform: scale(0.85);
+}
+
+/* container for control buttons (prev, play/pause, next) */
+#controls {
+	position: absolute;
+	bottom: 20px; left: 0px; right: 0px;
+	padding: 38px 0px 28px 0px;
+	white-space: nowrap;
+	text-align: center;
+}
+
+/* control buttons (prev, play/pause, next) */
+.roundButton {
+	vertical-align: middle;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+	outline: none;
+	color: white;
+	background-color: transparent;
+	border: 2px solid white;
+	border-radius: 1000px;
+	filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.4));
+	transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.roundButton:hover, .roundButton:focus {
+	background-color: rgba(255,255,255,0.2);
+}
+.roundButton:active {
+	transform: scale(0.9);
+}
+.roundButtonBig {
+	width: 80px; height: 80px;
+}
+.roundButtonSmall {
+	width: 50px; height: 50px;
+}
+.button {
+	display: inline-block;
+	font-family: inherit;
+	font-weight: bold;
+	font-size: inherit;
+	text-decoration: none;
+	cursor: pointer;
+	outline: none;
+	margin: 5px; padding: 3px 6px;
+	color: white;
+	background-color: transparent;
+	border: 2px solid white;
+	border-radius: 5px;
+	filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.45));
+	transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.button:hover {
+	background-color: rgba(255,255,255,0.2);
+}
+.button:active {
+	transform: scale(0.9);
+}
+.showOnHover {
+	opacity: 0.4;
+}
+.showOnHover:hover, .showOnHover:focus {
+	opacity: 1;
+}
+#btnPlayPause {
+	background-image: url('../img/play.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+#btnMenu {
+	background-image: url('../img/menu.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+#btnCurrentPlaylist {
+	background-image: url('../img/currentplaylist.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+#btnFullscreen {
+	background-image: url('../img/fullscreen.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+#btnVolume {
+	background-image: url('../img/volume.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+#btnLogout {
+	background-image: url('../img/logout.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+/* menu (top right) */
+#menu {
+	position: absolute;
+	top: 20px; right: 20px;
+	text-align: right;
+}
+#menu > .roundButton {
+	margin-left: 10px;
+	display: inline-block;
+}
+
+/* special */
+#vis_not_supported_hint {
+	animation: fadeout 1s ease 3s forwards;
+}
+@keyframes fadeout {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+
+/* general style for sliders (range input) */
+/* general */
+input[type=range] {
+	-webkit-appearance: none;
+	border: 2px solid transparent;
+	border-radius: 1000px;
+	margin: 0px; padding: 0px;
+	border: 2px solid rgb(37,37,37);
+	border-bottom: 2px solid rgb(80,80,80);
+	background-color: rgb(18,18,18);
+	background: linear-gradient(to top, rgb(19,19,19), rgb(14,14,14));
+}
+input[type=range]:hover, input[type=range]:focus {
+	outline: none;
+	background-color: rgba(255,255,255,0.2);
+}
+/* for webkit browsers */
+input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	border: none;
+	border-radius: 50%;
+	background-color: white;
+	background: url('../img/slider.png');
+	background-size: cover;
+	box-shadow: 0px 0px 6px rgba(0,0,0,0.8);
+	cursor: pointer;
+	transition: transform 0.1s ease;
+}
+input[type=range]::-webkit-slider-runnable-track {
+	cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb:active {
+	transform: scale(0.9);
+}
+/* for mozilla browser */
+input[type=range]::-moz-range-track {
+	cursor: pointer;
+	box-shadow: none;
+	background: transparent;
+	border: none;
+}
+input[type=range]::-moz-range-thumb {
+	border: none;
+	border-radius: 50%;
+	background: white;
+	background: url('../img/slider.png');
+	background-size: cover;
+	cursor: pointer;
+	box-shadow: 0px 0px 6px rgba(0,0,0,0.8);
+	transition: transform 0.1s ease;
+}
+input[type=range]::-moz-range-thumb:active {
+	transform: scale(0.9);
+}
+
+/* style for timeline (range input) */
+/* general */
+input[type=range]#timeBarCurrent {
+	width: calc(100% - 4px); height: 20px;
+	position: absolute;
+	bottom: 0px; left: 0px; right: 0px;
+	background-color: transparent;
+	background: transparent;
+}
+/* for webkit browsers */
+input[type=range]#timeBarCurrent::-webkit-slider-thumb {
+	width: 20px; height: 20px;
+}
+/* for mozilla browser */
+input[type=range]#timeBarCurrent::-moz-range-thumb {
+	width: 20px; height: 20px;
+}
+/* for internet exploder */
+input[type=range]#timeBarCurrent::-ms-thumb {
+	/* boo */
+}
+
+/* style for volume bar (range input) */
+/* general */
+input[type=range]#volumeBar {
+	display: block;
+	position: absolute;
+	top: 33px; right: 280px;
+	width: 25%; height: 20px;
+	max-width: 300px;
+	z-index: 999;
+}
+/* for webkit browsers */
+input[type=range]#volumeBar::-webkit-slider-thumb {
+	width: 20px; height: 20px;
+}
+/* for mozilla browser */
+input[type=range]#volumeBar::-moz-range-thumb {
+	width: 20px; height: 20px;
+}
+
+
+/* infobox */
+#notification {
+	position: fixed;
+	top: 10px; left: 10px; right: 10px;
+	font-weight: bold;
+}
+.infobox {
+	padding: 5px 7px;
+	color: rgb(40,40,40);
+	background-color: white;
+	box-shadow: 0px 0px 15px black;
+}
+.error {
+	background-color: rgb(140, 10, 10);
+	color: white;
+	border-radius: 5px;
+}
+.ok {
+	background-color: rgb(10, 130, 10);
+	color: white;
+	text-shadow: 0px 0px 1px black;
+	border-radius: 5px;
+}
+
+
+/* for mobile devices */
+@media (max-width: 780px), (max-height: 500px) {
+	#content, #currentPlaylist {
+		bottom: 24px;
+	}
+	#controls {
+		bottom: 150px;
+	}
+	#title {
+		font-size: 20px;
+	}
+	#currentTime {
+		font-size: 55px;
+	}
+	#albumimgperspective {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		float: none;
+		margin-left: 0px;
+		position: fixed;
+		top: 90px; right: 0px; left: 0px; bottom: 280px;
+		width: 100%;
+		box-sizing: border-box;
+		perspective: 0px;
+	}
+	#albumimg {
+		height: 100%;
+		transform: rotateY(0deg);
+	}
+	#albumimg img {
+		display: inline;
+		width: auto; height: auto;
+		max-height: 100%; max-width: 100%;
+		min-height: auto; min-width: auto;
+	}
+	#logocontainer {
+		position: absolute;
+		bottom: -75px; right: -58px;
+		text-align: right;
+	}
+	#logo {
+		width: 250px; height: 250px;
+		box-sizing: border-box;
+	}
+	input[type=range]#volumeBar {
+		left: 35px;
+		width: calc(100% - 320px);
+		max-width: 999px;
+	}
+	#titleDetails {
+		visibility: hidden;
+	}
+}

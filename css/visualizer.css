@@ -1,0 +1,14 @@
+#visualization {
+	position: absolute;
+	top: -10%;
+	left: 0px;
+	right: 0px;
+	bottom: 25%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#visualizationCanvas {
+
+}

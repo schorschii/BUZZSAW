@@ -1,0 +1,393 @@
+	function download(url) {
+		obj('download_frame').src = url;
+	}
+
+	function openFile() {
+		obj('file-input').click();
+	}
+
+/* global variables */
+var visualizerOn = false;
+var remotePlayerId = -1;
+var currentTrackId = -1;
+var mobileWidth = 780;
+var mobileHeight = 500;
+var isVolumeOpen = false;
+var isMenuOpen = false;
+var isCurrentPlaylistOpen = false;
+
+/* toggleMenu()
+   toggleCurrentPlaylist()
+   toggleVolumeControl()
+   opens or closes the library (menu), current playlist or volume control */
+function toggleMenu(scrollto) {
+	var libparam_scrollto = "";
+	if (scrollto != "") libparam_scrollto = "?scrollto_active=1";
+	if (!isMenuOpen) {
+		if (window.innerWidth < mobileWidth || window.innerHeight < mobileHeight) {
+			obj('controls').style.display = "none";
+			obj('controlbar').style.display = "none";
+		}
+		ajaxRequest('content','library.php'+libparam_scrollto, scrollto);
+		obj('content').style.display = "block";
+		obj('currentPlaylist').style.display = "none";
+		obj('logo').classList.add('blur');
+		obj('visualization').classList.add('blur');
+		obj('mainPlayer').classList.add('blur');
+		addClass(obj('contentbg'), 'active');
+		isCurrentPlaylistOpen = false;
+	} else {
+		obj('logo').classList.remove('blur');
+		obj('visualization').classList.remove('blur');
+		obj('mainPlayer').classList.remove('blur');
+		obj('content').innerHTML = "";
+		obj('content').style.display = "none";
+		obj('controls').style.display = "block";
+		obj('controlbar').style.display = "table";
+		removeClass(obj('contentbg'), 'active');
+	}
+	isMenuOpen = !isMenuOpen;
+}
+function toggleCurrentPlaylist() {
+	obj('content').innerHTML = "";
+	obj('content').style.display = "none";
+	if (!isCurrentPlaylistOpen) {
+		if (window.innerWidth < mobileWidth || window.innerHeight < mobileHeight) {
+			obj('controls').style.display = "none";
+			obj('controlbar').style.display = "none";
+		}
+		obj('currentPlaylist').style.display = "block";
+		obj('logo').classList.add('blur');
+		obj('visualization').classList.add('blur');
+		obj('mainPlayer').classList.add('blur');
+		addClass(obj('contentbg'), 'active');
+		isMenuOpen = false;
+	} else {
+		obj('logo').classList.remove('blur');
+		obj('visualization').classList.remove('blur');
+		obj('mainPlayer').classList.remove('blur');
+		obj('currentPlaylist').style.display = "none";
+		obj('controls').style.display = "block";
+		obj('controlbar').style.display = "table";
+		removeClass(obj('contentbg'), 'active');
+	}
+	isCurrentPlaylistOpen = !isCurrentPlaylistOpen;
+}
+function toggleVolumeControl() {
+	if (!isVolumeOpen)
+		obj('volumeBar').style.display = "inline-block";
+	else
+		obj('volumeBar').style.display = "none";
+	isVolumeOpen = !isVolumeOpen;
+}
+
+/* toggleFullscreen()
+   self-explaining - on fullscreen button click */
+function toggleFullscreen(elem) {
+	elem = elem || document.documentElement;
+	if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+		if (elem.requestFullscreen)
+			elem.requestFullscreen();
+		else if (elem.msRequestFullscreen)
+			elem.msRequestFullscreen();
+		else if (elem.mozRequestFullScreen)
+			elem.mozRequestFullScreen();
+		else if (elem.webkitRequestFullscreen)
+			elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+	} else {
+		if (document.exitFullscreen)
+			document.exitFullscreen();
+		else if (document.msExitFullscreen)
+			document.msExitFullscreen();
+		else if (document.mozCancelFullScreen)
+			document.mozCancelFullScreen();
+		else if (document.webkitExitFullscreen)
+			document.webkitExitFullscreen();
+	}
+}
+
+/* refreshPlayPauseButton()
+   updates the image on the play/pause button depending on the player state */
+function refreshPlayPauseButton() {
+	if (!obj('mainPlayer').paused) {
+		if(obj('btnPlayPause') != null)
+			obj('btnPlayPause').style.backgroundImage = "url(img/pause.svg)";
+		if(remotePlayerId != -1)
+			ajaxRequest('dummy', 'remoteplayer.php?set='+remotePlayerId+'&state=1', '');
+	}
+	else {
+		obj('btnPlayPause').style.backgroundImage = "url(img/play.svg)";
+		if(remotePlayerId != -1)
+			ajaxRequest('dummy', 'remoteplayer.php?set='+remotePlayerId+'&state=0', '');
+	}
+}
+
+/* togglePlayPause()
+   self-explaining */
+function togglePlayPause() {
+	if (obj('mainPlayer').paused) {
+		if(isSafari() == true) 	obj('mainPlayer').play();
+		else 					fadeAudioIn('mainPlayer');
+		obj('btnPlayPause').style.backgroundImage = "url(img/pause.svg)";
+	} else {
+		if(isSafari() == true) 	obj('mainPlayer').pause();
+		else 					fadeAudioOut('mainPlayer', true);
+		obj('btnPlayPause').style.backgroundImage = "url(img/play.svg)";
+	}
+}
+
+/* getTime()
+   updates the time labels and time bar position */
+var refreshTimeBar = true;
+var last_ajax_time_update = -1;
+function getTime() {
+	// get current times from player object
+	currentTime = obj('mainPlayer').currentTime;
+	totalTime = obj('mainPlayer').duration;
+
+	// calc percentage
+	var percent = currentTime / totalTime * 100;
+
+	// set values
+	obj("timeBarCurrent").max = totalTime;
+	if (refreshTimeBar) obj("timeBarCurrent").value = currentTime;
+	obj("timeBarCurrentIndicator").style.width = percent + "%";
+
+	// calc minutes and seconds from totalTime
+	totalTime = totalTime.toFixed(0);
+	secondsTotal = totalTime % 60;
+	minutesTotal = (totalTime - secondsTotal) / 60;
+
+	// calc minutes and seconds from currentTime
+	currentTime = currentTime.toFixed(0);
+	seconds = currentTime % 60;
+	minutes = (currentTime - seconds) / 60;
+
+	// add leading zero if necessary
+	if (secondsTotal < 10) secondsTotal = "0" + secondsTotal;
+	if (minutesTotal < 10) minutesTotal = "0" + minutesTotal;
+	if (seconds < 10) seconds = "0" + seconds;
+	if (minutes < 10) minutes = "0" + minutes;
+
+	// set values for totalTime
+	if (isNaN(minutesTotal) && isNaN(secondsTotal)) {
+		obj('timeMinutesTotal').innerHTML = "─ ─ ";
+		obj('timeSecondsTotal').innerHTML = "─ ─";
+	} else {
+		obj('timeMinutesTotal').innerHTML = minutesTotal;
+		obj('timeSecondsTotal').innerHTML = secondsTotal;
+	}
+
+	// set values for currentTime
+	obj('timeMinutes').innerHTML = minutes;
+	obj('timeSeconds').innerHTML = seconds;
+
+	// update remote player position
+	if(remotePlayerId != -1) {
+		// only update when 2 seconds are elapsed
+		if(Math.abs(last_ajax_time_update - currentTime) > 2) {
+			ajaxRequest('dummy', 'remoteplayer.php?set='+remotePlayerId+'&position='+Math.round(currentTime), '');
+			last_ajax_time_update = Math.round(currentTime);
+		}
+	}
+}
+
+/* setTime()
+   setVolume()
+   updates the time/volume on the player object after time/volume slider was moved */
+function setTime() {
+	obj('mainPlayer').currentTime = obj("timeBarCurrent").value;
+}
+function setVolume() {
+	obj('mainPlayer').volume = obj('volumeBar').value;
+}
+
+// don't toggle play pause on space bar key press if prev/play/pause/next button is focused (this will call togglePlayPause() twice)
+var controlButton_hasFocus = false;
+function controlButton_onFocus() { controlButton_hasFocus=true; }
+function controlButton_lostFocus() { controlButton_hasFocus=false; }
+// toggle play/pause on space key down
+window.addEventListener("keydown",function (e) {
+	// 32 = SPACE
+	if (e.keyCode == 32 && controlButton_hasFocus == false) {
+		togglePlayPause();
+	}
+});
+
+function thisindex(elm)
+{
+	var nodes = elm.parentNode.childNodes, node;
+	var i = count = 0;
+	while( (node=nodes.item(i++)) && node!=elm )
+		if( node.nodeType==1 ) count++;
+	return count;
+}
+
+var current = 0;
+function initPlaylist(initialTrackNumber) {
+
+	current = initialTrackNumber;
+	var tracks = obj('playlist').getElementsByClassName('track');
+	var index;
+	for (index = 0; index < tracks.length; ++index) {
+		tracks[index].addEventListener('click',function(e) {
+			e.preventDefault();
+			runPlaylist(this, "");
+			current = thisindex(this.parentElement);
+		});
+	}
+
+	obj('mainPlayer').addEventListener('ended',function(e) {
+		nextTrack(true);
+	});
+}
+function nextTrack(forward) {
+	var tracks = playlist.getElementsByClassName('track');
+	var len = tracks.length - 1;
+
+	if (forward) current++;
+	else current--;
+
+	if(current == len+1){
+		current = 0;
+		link = tracks[0];
+	} else {
+		link = tracks[current];
+	}
+	runPlaylist(link, "");
+}
+function setVideoStyle(playerobjid) {
+	if (playerobjid == "")
+		player = obj('mainPlayer');
+	else
+		player = obj(playerobjid);
+	if (player.videoHeight == 0 || player.videoHeight == null) {
+		visualizerOn = true;
+		removeClass(player, 'videoactive');
+		if(obj('bottombar') != null) removeClass(obj('bottombar'), 'videoactive');
+		if(obj('menu') != null) removeClass(obj('menu'), 'videoactive');
+	} else {
+		visualizerOn = false;
+		addClass(player, 'videoactive');
+		if(obj('bottombar') != null) addClass(obj('bottombar'), 'videoactive');
+		if(obj('menu') != null) addClass(obj('menu'), 'videoactive');
+	}
+}
+
+/* runPlaylist(link, playerobjid)
+   starts playing a new track from the current playlist
+   - link : html anchor object
+   - optional playerobjid : the id of the player object to play this track
+*/
+function runPlaylist(link, playerobjid) {
+	// get player object by id
+	if (playerobjid == "") player = obj('mainPlayer');
+	else player = obj(playerobjid);
+
+	// set new player source
+	player.src = link['href'];
+
+	// set new artist, title, album text and load new cover image
+	obj('titleArtist').innerHTML = link.getAttribute('titleArtist');
+	obj('titleTitle').innerHTML = link.getAttribute('titleTitle');
+	if (obj('titleAlbumDetails') != null)
+		obj('titleAlbumDetails').innerHTML = link.getAttribute('titleAlbum');
+	ajaxRequest('albumimg','getcover.php?title='+link.getAttribute('titleID'),'');
+	ajaxRequest('albumimgDetails','getcover.php?title='+link.getAttribute('titleID'),'');
+	// set new document title
+	document.title = link.getAttribute('titleTitle') + " - " + link.getAttribute('titleArtist');
+	// set new track id
+	currentTrackId = link.getAttribute('titleID');
+	// set new url
+	window.history.pushState({}, null, 'player.php?currentplaylist=album&track='+link.getAttribute('titleID'));
+
+	// highlight new track in current playlist by setting style class
+	var tracks = playlist.getElementsByClassName('track');
+	var len = tracks.length - 1;
+	for (index = 0; index < tracks.length; ++index)
+		{ removeClass(tracks[index], 'active'); }
+	addClass(link, 'active');
+
+	// set audio volume to last state
+	player.volume = audioLastState;
+
+	// start playback
+	player.load(); player.play();
+
+	// if remote player is set, refresh current state
+	if(remotePlayerId != -1)
+		ajaxRequest('dummy', 'remoteplayer.php?set='+remotePlayerId+'&track='+link.getAttribute('titleID'), '');
+}
+
+/* fadeAudioOut(audioObjId, pause)
+   fadeAudioIn(audioObjId)
+   functions for fading audio in and out
+   - pause : (boolean) pause player after faded out
+   - playerobjid : the id of the player object to play this track
+*/
+var audioFadeStep = 0.1;
+var audioLastState = 0.75;
+function fadeAudioOut(audioObjId, pause) {
+	var audioObj = obj(audioObjId);
+	audioLastState = audioObj.volume;
+	var fadeAudio = setInterval(function () {
+		if(audioObj.volume - audioFadeStep < 0)
+			audioObj.volume = 0;
+		else
+			audioObj.volume -= audioFadeStep;
+		if (audioObj.volume === 0.0) {
+			if(pause) audioObj.pause();
+			clearInterval(fadeAudio);
+		}
+	}, 40);
+}
+function fadeAudioIn(audioObjId) {
+	var audioObj = obj(audioObjId);
+	audioObj.play();
+	var fadeAudio = setInterval(function () {
+		if(audioObj.volume + audioFadeStep > audioLastState)
+			audioObj.volume = audioLastState;
+		else
+			audioObj.volume += audioFadeStep;
+		if (audioObj.volume === audioLastState) {
+			clearInterval(fadeAudio);
+		}
+	}, 40);
+}
+
+/* remote player functions */
+function setRemotePlayer(select) {
+	var selectedString = select.options[select.selectedIndex].value;
+	remotePlayerId = selectedString;
+}
+function sendAllRemotePlayerParameters() {
+	if(remotePlayerId != -1) {
+		currentTime = obj('mainPlayer').currentTime;
+		var currentstate = 1;
+		if(obj('mainPlayer').paused) currentstate = 0;
+		ajaxRequest('dummy', 'remoteplayer.php?set='+remotePlayerId+'&track='+currentTrackId+'&position='+Math.round(currentTime)+'&state='+currentstate, '');
+		last_ajax_time_update = Math.round(currentTime);
+	}
+	ajaxRequest('dummy', 'remoteplayer.php?set_remoteplayer_session='+remotePlayerId,'');
+}
+
+/* helper functions for setting and removing style classes from objects */
+function hasClass(el, className) {
+	if (el.classList)
+		return el.classList.contains(className)
+	else
+		return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+}
+function addClass(el, className) {
+	if (el.classList)
+		el.classList.add(className)
+	else if (!hasClass(el, className)) el.className += " " + className
+}
+function removeClass(el, className) {
+	if (el.classList)
+		el.classList.remove(className)
+	else if (hasClass(el, className)) {
+		var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
+		el.className=el.className.replace(reg, ' ')
+	}
+}

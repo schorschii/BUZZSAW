@@ -1,0 +1,12 @@
+body {
+	overflow-y: scroll;
+}
+#loader {
+	margin-top: 17%;
+}
+#loader, #scanprogress {
+	text-align: center;
+}
+#loader > img {
+	animation: sawspin 20s linear 0s infinite;
+}
