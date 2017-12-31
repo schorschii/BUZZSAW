@@ -29,35 +29,38 @@
 	$getID3 = new getID3;
 
 	require_once('database.php');
+	$THUMB_DIR = "music_thumb";
+	$MUSIC_DIR = "music";
 
-	// remove old data
-	#if (!$mysqli->multi_query(file_get_contents("sql/clean.sql")))
-	#	echo("<b>ERROR TRUNCATING TABLES:</b><br>" . $mysqli->error . "<br>");
-	#clearStoredResults($mysqli);
+	// remove old db entries and album cover thumbnails
+	if(isset($_GET['rescan']) && $_GET['rescan'] == 1) {
+		if (!$mysqli->multi_query(file_get_contents("sql/clean.sql")))
+			die("<b>ERROR TRUNCATING TABLES:</b><br>" . $mysqli->error . "<br>");
+		clearStoredResults($mysqli);
 
-	// remove all previous album cover thumbnails
-	#$files = glob('./music_thumb/*');
-	#foreach($files as $file){
-	#	if(is_file($file))
-	#	unlink($file);
-	#}
+		$files = glob($THUMB_DIR.'/*');
+		foreach($files as $file){
+			if(is_file($file)) unlink($file);
+		}
+	}
 
 	// find all music files inside the music directory
-	$counter = 0; $counter_new = 0; $counter_update = 0;
+	$counter = 0;
 	$fs_perm_warned = false;
-	$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator('./music'));
+	$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($MUSIC_DIR));
 	foreach ($it as $file) {
 		if (isAudioFile($file)) {
 			// check if file is already in database
 			$track_id = -1;
 			$track_cover = "";
-			$sql = "SELECT tr.id AS 'id', tr.cover AS 'cover' "
-				 . "FROM track tr "
-				 . "WHERE tr.path = ?;";
+			$sql = "SELECT tr.id AS 'id', tr.cover AS 'cover' FROM track tr WHERE tr.path = ?";
 			$statement = $mysqli->prepare($sql);
 			$statement->bind_param('s', $file);
-			$statement->execute();
+			if (!$statement->execute())
+				echo("<b>EXEC FAILED:</b>&nbsp;$file<br>$sql<br>".$statement->error."<br>");
 			$result = $statement->get_result();
+			if (!$result)
+				echo("<b>GET RESULT FAILED:</b>&nbsp;$file<br>$sql<br>".$statement->error."<br>");
 			while($row = $result->fetch_object()) {
 				$track_id = $row->id;
 				$track_cover = $row->cover;
@@ -81,6 +84,8 @@
 			$title = "Unknown Title";
 			if (isset($FileInfo['comments_html']['title'][0]))
 				$title = $FileInfo['comments_html']['title'][0];
+			else
+				$title = pathinfo($file)['filename'];
 
 			// read track number
 			$track_number = 0;
@@ -89,52 +94,46 @@
 			if (strpos($track_number, '/') !== false) $track_number = explode('/', $track_number)[0];
 
 			// read cover if available
-			$cover = NULL;
-			if (isset($FileInfo['comments']['picture'][0])) {
-				if ($track_id != -1)
-					$filename = $track_cover;
+			$cover = null;
+			if (isset($FileInfo['comments']['picture'][0])
+			&& $FileInfo['comments']['picture'][0] != "") {
+				if ($track_id == -1 || $track_cover == "")
+					$filename = $THUMB_DIR . "/" . findFreeImageNumber() . ".jpg";
 				else
-					$filename = "music_thumb/" . $counter . ".jpg";
+					$filename = $track_cover;
 
 				if (file_put_contents($filename, $FileInfo['comments']['picture'][0]['data']) === false && $fs_perm_warned == false) {
 					$fs_perm_warned = true;
-					echo "<b>WARN:</b>&nbsp;Unable to write into ./music_thumb. Album covers will not be available.<br>";
+					echo "<b>WARN:</b>&nbsp;Unable to write into cover thumbnail directory. Album covers will not be available.<br>";
 				}
 				$cover = $filename;
 			}
 
-			if ($track_id == -1) {
-				// insert new track
-				$sql = "CALL InsertTrack(?, ?, ?, ?, ?, ?);";
-				$statement = $mysqli->prepare($sql);
-				if (!$statement)
-					echo "<b>PREPARE FAILED:</b>&nbsp;$sql<br>".$mysqli->error."<br>";
-				if (!$statement->bind_param('ssssss', $title, $album, $artist, $file, $track_number, $cover))
-					echo "<b>BIND FAILED:</b>&nbsp;$file<br>$sql<br>";
-				if (!$statement->execute())
-					echo "<b>EXEC FAILED:</b>&nbsp;$file<br>$sql<br>".$statement->error."<br>";
-				$counter_new ++;
-			} else {
-				// update track
-				$sql = "UPDATE track "
-					 . "SET title = ?, track_number = ? "
-					 . "WHERE id = ?;";
-				$statement = $mysqli->prepare($sql);
-				if (!$statement)
-					echo "<b>PREPARE FAILED:</b>&nbsp;$sql<br>".$mysqli->error."<br>";
-				if (!$statement->bind_param('sii', $title, $track_number, $track_id))
-					echo "<b>BIND FAILED:</b>&nbsp;$file<br>$sql<br>";
-				if (!$statement->execute())
-					echo "<b>EXEC FAILED:</b>&nbsp;$file<br>$sql<br>".$statement->error."<br>";
-				$counter_update ++;
-			}
+
+			// call insert/update sql procedure
+			$sql = "CALL InsertUpdateTrack(?, ?, ?, ?, ?, ?)";
+			$statement = $mysqli->prepare($sql);
+			if (!$statement)
+				echo("<b>PREPARE FAILED:</b>&nbsp;$sql<br>".$mysqli->error."<br>");
+			if (!$statement->bind_param('ssssss', $title, $album, $artist, $file, $track_number, $cover))
+				echo("<b>BIND FAILED:</b>&nbsp;$file<br>$sql<br>");
+			if (!$statement->execute())
+				echo("<b>EXEC FAILED:</b>&nbsp;$file<br>$sql<br>".$statement->error."<br>");
 
 			flush(); ob_flush();
 			$counter ++;
 		}
 	}
 
-	echo "<br><b>Finished - inserted $counter_new new track(s), updated $counter_update track(s).</b><br>";
+	// call cleanup script
+	$sql = "CALL PurgeAlbumArtist";
+	$statement = $mysqli->prepare($sql);
+	if (!$statement)
+		echo("<b>PREPARE FAILED:</b>&nbsp;$sql<br>".$mysqli->error."<br>");
+	if (!$statement->execute())
+		echo("<b>EXEC FAILED:</b>&nbsp;$file<br>$sql<br>".$statement->error."<br>");
+
+	echo "<br><b>Finished - scanned $counter track(s).</b><br>";
 	echo "<a href='player.php' class='styled_link'>Open Player</a>";
 	?>
 	</div>
@@ -143,3 +142,18 @@
 
 </body>
 </html>
+
+<?php
+// find next free number for image file
+function findFreeImageNumber() {
+	global $THUMB_DIR;
+	$free = false;
+	$img_free_counter = 0;
+	while (!$free) {
+		$img_free_counter ++;
+		if (!file_exists($THUMB_DIR . "/" . $img_free_counter . ".jpg"))
+			$free = true;
+	}
+	return $img_free_counter;
+}
+?>

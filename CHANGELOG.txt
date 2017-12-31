@@ -1,3 +1,9 @@
+v0.0.4
+- [new] scan.php finds correct next free cover image number for file name in music_thumb
+- [fix] scan.php optimizations: artist and album are now updated correctly, option for completely rescan files (truncates database)
+- [new] mysqli connection now uses utf8 encoding
+- [new] volume slider value is now saved in PHP session, so the value is restored when opening an new track
+
 v0.0.3
 - [new] update notification
 - [new] scan doesn't truncate tables anymore - it updates already existing tracks, so playlists don't get lost anymore

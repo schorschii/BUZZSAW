@@ -10,4 +10,5 @@
 	if ($mysqli->connect_errno) {
 		die("Failed to connect to database server: " . $mysqli->connect_error);
 	}
+	$mysqli->set_charset("utf8");
 ?>

@@ -200,6 +200,8 @@ function setTime() {
 }
 function setVolume() {
 	obj('mainPlayer').volume = obj('volumeBar').value;
+	// save volume in php session, so it can be restored when opening a new track
+	ajaxRequest('dummy', 'sessionvars.php?set=volume&value='+obj('volumeBar').value, '');
 }
 
 // don't toggle play pause on space bar key press if prev/play/pause/next button is focused (this will call togglePlayPause() twice)
@@ -312,7 +314,7 @@ function runPlaylist(link, playerobjid) {
 	player.volume = audioLastState;
 
 	// start playback
-	player.load(); player.play();
+	player.load(); player.play(); setVolume();
 
 	// if remote player is set, refresh current state
 	if(remotePlayerId != -1)

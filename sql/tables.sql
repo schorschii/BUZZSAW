@@ -1,15 +1,13 @@
 /*** BUZZSAW audio server ***/
 /* database structure */
 
--- --------------------------------------------------------
-
 --
 -- Tabellenstruktur für Tabelle `album`
 --
 
 CREATE TABLE `album` (
   `id` int(11) NOT NULL,
-  `title` text NOT NULL,
+  `title` text CHARACTER SET utf8 NOT NULL,
   `artist_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -21,7 +19,7 @@ CREATE TABLE `album` (
 
 CREATE TABLE `artist` (
   `id` int(11) NOT NULL,
-  `title` text NOT NULL
+  `title` text CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -32,8 +30,21 @@ CREATE TABLE `artist` (
 
 CREATE TABLE `playlist` (
   `id` int(11) NOT NULL,
-  `title` text NOT NULL,
+  `title` text CHARACTER SET utf8 NOT NULL,
   `type` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `playlist_party`
+--
+
+CREATE TABLE `playlist_party` (
+  `id` int(11) NOT NULL,
+  `track_id` int(11) NOT NULL,
+  `votes` int(11) NOT NULL,
+  `votes_total` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -52,13 +63,27 @@ CREATE TABLE `playlist_track` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `remote`
+--
+
+CREATE TABLE `remote` (
+  `id` int(11) NOT NULL,
+  `title` text CHARACTER SET utf8 NOT NULL,
+  `track_id` int(11) DEFAULT NULL,
+  `position` double DEFAULT NULL,
+  `state` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `setting`
 --
 
 CREATE TABLE `setting` (
   `id` int(11) NOT NULL,
-  `identifier` text NOT NULL,
-  `value` text NOT NULL
+  `identifier` text CHARACTER SET utf8 NOT NULL,
+  `value` text CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -69,40 +94,14 @@ CREATE TABLE `setting` (
 
 CREATE TABLE `track` (
   `id` int(11) NOT NULL,
-  `path` text NOT NULL,
-  `title` text NOT NULL,
+  `path` text CHARACTER SET utf8mb4 NOT NULL,
+  `title` text CHARACTER SET utf8 NOT NULL,
   `artist_id` int(11) DEFAULT NULL,
   `album_id` int(11) DEFAULT NULL,
   `track_number` int(11) DEFAULT NULL,
   `duration` int(11) DEFAULT NULL,
-  `cover` text
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `remote`
---
-
-CREATE TABLE `remote` (
-  `id` int(11) NOT NULL,
-  `title` text NOT NULL,
-  `track_id` int(11),
-  `position` double,
-  `state` int(11)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `playlist_track`
---
-
-CREATE TABLE `playlist_party` (
-  `id` int(11) NOT NULL,
-  `track_id` int(11) NOT NULL,
-  `votes` int(11) NOT NULL,
-  `votes_total` int(11) NOT NULL
+  `cover` text CHARACTER SET utf8,
+  `inserted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -129,12 +128,24 @@ ALTER TABLE `playlist`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indizes für die Tabelle `playlist_party`
+--
+ALTER TABLE `playlist_party`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indizes für die Tabelle `playlist_track`
 --
 ALTER TABLE `playlist_track`
   ADD PRIMARY KEY (`id`),
   ADD KEY `playlist_id` (`playlist_id`),
   ADD KEY `track_id` (`track_id`);
+
+--
+-- Indizes für die Tabelle `remote`
+--
+ALTER TABLE `remote`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indizes für die Tabelle `setting`
@@ -150,18 +161,6 @@ ALTER TABLE `track`
   ADD KEY `artist_id` (`artist_id`),
   ADD KEY `album_id` (`album_id`),
   ADD KEY `artist_id_2` (`artist_id`);
-
---
--- Indizes für die Tabelle `remote`
---
-ALTER TABLE `remote`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `playlist_party`
---
-ALTER TABLE `playlist_party`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
@@ -181,34 +180,32 @@ ALTER TABLE `artist`
 -- AUTO_INCREMENT für Tabelle `playlist`
 --
 ALTER TABLE `playlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
---
--- AUTO_INCREMENT für Tabelle `playlist_track`
---
-ALTER TABLE `playlist_track`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
---
--- AUTO_INCREMENT für Tabelle `setting`
---
-ALTER TABLE `setting`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `track`
---
-ALTER TABLE `track`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
---
--- AUTO_INCREMENT für Tabelle `remote`
---
-ALTER TABLE `remote`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT für Tabelle `playlist_party`
 --
 ALTER TABLE `playlist_party`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+--
+-- AUTO_INCREMENT für Tabelle `playlist_track`
+--
+ALTER TABLE `playlist_track`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `remote`
+--
+ALTER TABLE `remote`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `setting`
+--
+ALTER TABLE `setting`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT für Tabelle `track`
+--
+ALTER TABLE `track`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- Constraints der exportierten Tabellen
 --
@@ -233,9 +230,6 @@ ALTER TABLE `track`
   ADD CONSTRAINT `fk_album` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_artist` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
---
--- Standardwerte der exportierten Tabellen
---
 
 INSERT INTO `setting` (`id`, `identifier`, `value`) VALUES
 (1, 'password_user', ''),

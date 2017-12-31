@@ -373,7 +373,7 @@ function createCurrentPlaylistEntry($track_number, $title, $artist, $album, $pat
 		<input type="range" id="timeBarCurrent" min="0" max="100" step="0.001" value="0" onchange="setTime();" onmousedown="refreshTimeBar=false;" onmouseup="refreshTimeBar=true;"></input>
 	</div>
 
-	<input type="range" id="volumeBar" min="0" max="1" step="0.01" value="0.8" onchange="setVolume();" style="display: none;"></input>
+	<input type="range" id="volumeBar" min="0" max="1" step="0.01" value="<?php echo isset($_SESSION['volume']) ? $_SESSION['volume'] : "0.8"; ?>" onchange="setVolume();" style="display: none;"></input>
 
 	<div id="menu">
 		<?php if(!(getOS1() == "iPhone" && getBrowser1() == "Safari")) { ?>
@@ -387,7 +387,7 @@ function createCurrentPlaylistEntry($track_number, $title, $artist, $album, $pat
 	<div id="notification">
 	</div>
 
-	<script>initPlaylist(<?php echo ($currenttrack_number-1); ?>);</script>
+	<script>initPlaylist(<?php echo ($currenttrack_number-1); ?>);setVolume();</script>
 
 	<?php if($currentURL == "") echo "<script>toggleMenu('');</script>"; ?>
 

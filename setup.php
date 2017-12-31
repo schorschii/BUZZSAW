@@ -18,7 +18,10 @@ if(IsAlreadyEstablished($mysqli)) {
 		if (!$mysqli->multi_query(file_get_contents("sql/tables.sql")))
 			die("<b>ERROR CREATING TABLES:</b><br>" . $mysqli->error . "<br>");
 		clearStoredResults($mysqli);
-		if (!$mysqli->query(file_get_contents("sql/InsertTrack.sql")))
+		if (!$mysqli->query(file_get_contents("sql/InsertUpdateTrack.sql")))
+			die("<b>ERROR IMPORTING FUNCTION INSERTTRACK:</b><br>" . $mysqli->error . "<br>");
+		clearStoredResults($mysqli);
+		if (!$mysqli->query(file_get_contents("sql/PurgeAlbumArtist.sql")))
 			die("<b>ERROR IMPORTING FUNCTION INSERTTRACK:</b><br>" . $mysqli->error . "<br>");
 		clearStoredResults($mysqli);
 		if (!$mysqli->query(file_get_contents("sql/MoveTrackInPlaylist.sql")))
