@@ -1,3 +1,5 @@
+- new volume slider
+
 v0.0.4
 - [new] scan.php finds correct next free cover image number for file name in music_thumb
 - [fix] scan.php optimizations: artist and album are now updated correctly, option for completely rescan files (truncates database)

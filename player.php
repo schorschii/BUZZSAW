@@ -345,7 +345,7 @@ function createCurrentPlaylistEntry($track_number, $title, $artist, $album, $pat
 			</tr>
 		</table>
 
-		<div id="controls" class="tooltip">
+		<div id="controls" class="albumtooltip">
 			<button id="btnPrev" class="roundButton roundButtonSmall" onClick="nextTrack(false);" onfocus="controlButton_onFocus();" onblur="controlButton_lostFocus();">prev</button>
 			<button id="btnPlayPause" class="roundButton roundButtonBig" onClick="togglePlayPause();" onfocus="controlButton_onFocus();" onblur="controlButton_lostFocus();">&nbsp;</button>
 			<button id="btnNext" class="roundButton roundButtonSmall" onClick="nextTrack(true);" onfocus="controlButton_onFocus();" onblur="controlButton_lostFocus();">next</button>
@@ -373,11 +373,14 @@ function createCurrentPlaylistEntry($track_number, $title, $artist, $album, $pat
 		<input type="range" id="timeBarCurrent" min="0" max="100" step="0.001" value="0" onchange="setTime();" onmousedown="refreshTimeBar=false;" onmouseup="refreshTimeBar=true;"></input>
 	</div>
 
-	<input type="range" id="volumeBar" min="0" max="1" step="0.01" value="<?php echo isset($_SESSION['volume']) ? $_SESSION['volume'] : "0.8"; ?>" onchange="setVolume();" style="display: none;"></input>
-
 	<div id="menu">
 		<?php if(!(getOS1() == "iPhone" && getBrowser1() == "Safari")) { ?>
-		<button id="btnVolume" class="roundButton roundButtonSmall" onclick="toggleVolumeControl();" title="Show or hide volume slider">&nbsp;</button>
+		<div class="volumetooltip">
+			<button id="btnVolume" class="roundButton roundButtonSmall" title="Show or hide volume slider">&nbsp;</button>
+			<div class="tooltipcontent">
+				<input type="range" id="volumeBar" min="0" max="1" step="0.01" value="<?php echo isset($_SESSION['volume']) ? $_SESSION['volume'] : "0.8"; ?>" onchange="setVolume();"></input>
+			</div>
+		</div>
 		<?php } ?>
 		<button id="btnFullscreen" class="roundButton roundButtonSmall" onclick="toggleFullscreen();" title="Toggle fullscreen mode">&nbsp;</button>
 		<button id="btnCurrentPlaylist" class="roundButton roundButtonSmall" onclick="toggleCurrentPlaylist();" title="Show current playlist">&nbsp;</button>

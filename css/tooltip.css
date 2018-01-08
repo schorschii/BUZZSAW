@@ -1,7 +1,8 @@
-.tooltip {
+/* album tooltip */
+.albumtooltip {
 	position: relative;
 }
-.tooltip .tooltipcontent {
+.albumtooltip .tooltipcontent {
 	pointer-events: none; opacity: 0;
 	display: inline-block;
 	width: 400px;
@@ -18,8 +19,8 @@
 	transition: opacity 0.6s, bottom 0.6s;
 	box-shadow: 0px 0px 8px rgba(0,0,0,0.9);
 }
-.tooltip .tooltipcontent::after {
-	content: "";
+.albumtooltip .tooltipcontent::after {
+	content: " ";
 	position: absolute;
 	top: 100%;
 	left: 50%;
@@ -28,27 +29,79 @@
 	border-style: solid;
 	border-color: #555 transparent transparent transparent;
 }
-.tooltip:hover .tooltipcontent {
+.albumtooltip:hover .tooltipcontent {
 	opacity: 1;
 	bottom: 120%;
 }
-.tooltip .tooltipcontent #albumimgDetails img {
+.albumtooltip .tooltipcontent #albumimgDetails img {
 	padding: 0px; margin: 0px;
 	border-radius: 4px 4px 0px 0px;
 	max-width: 400px;
 	box-shadow: 0px 2px 8px -4px rgba(0,0,0,0.8);
 }
-.tooltip .tooltipcontent .textcontainer img {
+.albumtooltip .tooltipcontent .textcontainer img {
 	vertical-align: middle;
 	height: 18px;
 	margin-right: 8px;
 }
-.tooltip .tooltipcontent .textcontainer #titleTitleDetails {
+.albumtooltip .tooltipcontent .textcontainer #titleTitleDetails {
 	font-weight: bold;
 }
-.tooltip .textcontainer {
+.albumtooltip .textcontainer {
 	margin: 0px 10px;
 	max-width: 400px;
 	overflow: hidden;
 	padding: 5px 0px 5px 0px;
+}
+
+/* volume tooltip */
+.volumetooltip {
+	display: inline-block;
+	position: relative;
+	width: 380px;
+}
+.volumetooltip .tooltipcontent {
+	opacity: 0;
+	display: inline-block;
+	width: 300px;
+	height: 40px;
+	background-color: #555;
+	color: #fff;
+	text-align: center;
+	border-radius: 4px;
+	position: absolute;
+	padding: 0px;
+	z-index: 1;
+	bottom: calc(50% - 20px);
+	right: calc(0% + 35px);
+	margin-left: -200px;
+	transition: opacity 0.6s, right 0.6s;
+	box-shadow: 0px 0px 8px rgba(0,0,0,0.9);
+}
+.volumetooltip .tooltipcontent::after {
+	content: " ";
+	position: absolute;
+	top: 50%;
+	left: 100%;
+	margin-top: -10px;
+	border-width: 10px;
+	border-style: solid;
+	border-color: transparent transparent transparent #555;
+}
+.volumetooltip:hover .tooltipcontent {
+	opacity: 1;
+	right: calc(0% + 70px);
+}
+@media (max-width: 600px) {
+	.volumetooltip {
+		display: none;
+	}
+	#menu {
+		position: absolute;
+		top: 20px; right: 20px; left: 20px;
+		text-align: center;
+	}
+	#menu > .roundButton:nth-child(2) {
+		margin-left: 0px;
+	}
 }

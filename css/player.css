@@ -395,12 +395,9 @@ input[type=range]#timeBarCurrent::-ms-thumb {
 /* style for volume bar (range input) */
 /* general */
 input[type=range]#volumeBar {
-	display: block;
-	position: absolute;
-	top: 33px; right: 280px;
-	width: 25%; height: 20px;
-	max-width: 300px;
-	z-index: 999;
+	box-sizing: border-box;
+	width: calc(100% - 16px);
+	margin: 9px 8px 8px 8px;
 }
 /* for webkit browsers */
 input[type=range]#volumeBar::-webkit-slider-thumb {
@@ -482,11 +479,6 @@ input[type=range]#volumeBar::-moz-range-thumb {
 	#logo {
 		width: 250px; height: 250px;
 		box-sizing: border-box;
-	}
-	input[type=range]#volumeBar {
-		left: 35px;
-		width: calc(100% - 320px);
-		max-width: 999px;
 	}
 	#titleDetails {
 		visibility: hidden;

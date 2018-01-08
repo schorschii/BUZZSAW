@@ -18,7 +18,6 @@ var isCurrentPlaylistOpen = false;
 
 /* toggleMenu()
    toggleCurrentPlaylist()
-   toggleVolumeControl()
    opens or closes the library (menu), current playlist or volume control */
 function toggleMenu(scrollto) {
 	var libparam_scrollto = "";
@@ -72,13 +71,6 @@ function toggleCurrentPlaylist() {
 		removeClass(obj('contentbg'), 'active');
 	}
 	isCurrentPlaylistOpen = !isCurrentPlaylistOpen;
-}
-function toggleVolumeControl() {
-	if (!isVolumeOpen)
-		obj('volumeBar').style.display = "inline-block";
-	else
-		obj('volumeBar').style.display = "none";
-	isVolumeOpen = !isVolumeOpen;
 }
 
 /* toggleFullscreen()
