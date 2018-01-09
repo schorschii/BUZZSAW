@@ -1,4 +1,5 @@
-- new volume slider
+- [new] new volume slider
+- [new] new library view: recently added
 
 v0.0.4
 - [new] scan.php finds correct next free cover image number for file name in music_thumb

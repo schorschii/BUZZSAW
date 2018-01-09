@@ -168,6 +168,32 @@ if (isset($_GET['track'])) {
 				}
 				break;
 
+			case "recentlyadded":
+				$sql = "SELECT @curRow := @curRow + 1 AS 'rank', "
+				     . "tr.id as 'id', "
+				     . "tr.track_number as 'track_number', "
+				     . "tr.title as 'title', "
+				     . "al.title as 'album', "
+				     . "ar.title as 'artist' "
+				     . "FROM track tr "
+				     . "INNER JOIN album al ON tr.album_id = al.id "
+				     . "INNER JOIN artist ar ON tr.artist_id = ar.id "
+				     . "JOIN  (SELECT @curRow := 0) r "
+				     . "ORDER BY tr.inserted DESC LIMIT 500";
+				$statement = $mysqli->prepare($sql);
+				$statement->execute();
+				$result = $statement->get_result();
+
+				while($row = $result->fetch_object()) {
+					$active = "";
+					if ($row->id == $_GET['track']) {
+						$active ="active";
+						$currenttrack_number = $row->rank;
+					}
+					$currentplaylist .= createCurrentPlaylistEntry($row->rank, $row->title, $row->artist, $row->album, "music.php?track=".$row->id, $active, $row->id);
+				}
+				break;
+
 			default:
 		}
 	}
