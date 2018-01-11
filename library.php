@@ -47,7 +47,7 @@
 			</td>
 			<td>
 				<a href='#' onclick="ajaxRequest('content','library.php?view=recentlyadded');" class="<?php $imgadd=""; if ($view =='recentlyadded') { echo 'active'; $imgadd="_b"; } ?>">
-					<img src="img/menu<?php echo $imgadd; ?>.svg" height="30"><br>Recently added
+					<img src="img/recent<?php echo $imgadd; ?>.svg" height="30"><br>Recent
 				</a>
 			</td>
 			<td>

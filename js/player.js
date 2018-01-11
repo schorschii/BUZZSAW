@@ -250,18 +250,19 @@ function nextTrack(forward) {
 	}
 	runPlaylist(link, "");
 }
+var isVideo = false;
 function setVideoStyle(playerobjid) {
-	if (playerobjid == "")
-		player = obj('mainPlayer');
-	else
-		player = obj(playerobjid);
+	if (playerobjid == "") player = obj('mainPlayer');
+	else player = obj(playerobjid);
 	if (player.videoHeight == 0 || player.videoHeight == null) {
 		visualizerOn = true;
+		isVideo = false;
 		removeClass(player, 'videoactive');
 		if(obj('bottombar') != null) removeClass(obj('bottombar'), 'videoactive');
 		if(obj('menu') != null) removeClass(obj('menu'), 'videoactive');
 	} else {
 		visualizerOn = false;
+		isVideo = true;
 		addClass(player, 'videoactive');
 		if(obj('bottombar') != null) addClass(obj('bottombar'), 'videoactive');
 		if(obj('menu') != null) addClass(obj('menu'), 'videoactive');
@@ -348,6 +349,26 @@ function fadeAudioIn(audioObjId) {
 		}
 	}, 40);
 }
+
+/* function for hiding the mouse when a video is playing */
+function showCursor() {
+	document.body.style.cursor = "default";
+}
+function hideCursor() {
+	document.body.style.cursor = "none";
+}
+var hideCursorTime = 3000;
+var hideCursorTimerFunction = function () {
+	if(isVideo) {
+		hideCursor();
+	}
+}
+var hideCursorTimer  = setTimeout(hideCursorTimerFunction, hideCursorTime);
+window.onmousemove = function() {
+	showCursor();
+	clearTimeout(hideCursorTimer);
+	hideCursorTimer = setTimeout(hideCursorTimerFunction, hideCursorTime);
+};
 
 /* remote player functions */
 function setRemotePlayer(select) {
