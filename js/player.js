@@ -353,9 +353,13 @@ function fadeAudioIn(audioObjId) {
 /* function for hiding the mouse when a video is playing */
 function showCursor() {
 	document.body.style.cursor = "default";
+	obj('bottombar').style.opacity = "1";
+	obj('menu').style.opacity = "1";
 }
 function hideCursor() {
 	document.body.style.cursor = "none";
+	obj('bottombar').style.opacity = "0";
+	obj('menu').style.opacity = "0";
 }
 var hideCursorTime = 3000;
 var hideCursorTimerFunction = function () {
