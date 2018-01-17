@@ -1,4 +1,4 @@
-CREATE PROCEDURE `InsertUpdateTrack`(`insert_track` TEXT, `insert_album` TEXT, `insert_artist` TEXT, `insert_path` TEXT, `insert_track_number` INT, `insert_cover` TEXT)
+CREATE PROCEDURE `InsertUpdateTrack`(`insert_track` TEXT, `insert_album` TEXT, `insert_artist` TEXT, `insert_path` TEXT, `insert_track_number` INT, `insert_cover` TEXT, `insert_duration` INT)
 
 BEGIN
 
@@ -32,12 +32,12 @@ END IF;
 
 IF track_check IS NOT NULL THEN
 	/* update if track already exists */
-	UPDATE track SET title = insert_track, artist_id = artist_check, album_id = album_check, path = insert_path, track_number = insert_track_number, cover = insert_cover
-    WHERE id = track_check;
+	UPDATE track SET title = insert_track, artist_id = artist_check, album_id = album_check, path = insert_path, track_number = insert_track_number, cover = insert_cover, duration = insert_duration
+	WHERE id = track_check;
 ELSE
 	/* insert new track */
-	INSERT INTO track (title, artist_id, album_id, path, track_number, cover)
-	VALUES (insert_track, artist_check, album_check, insert_path, insert_track_number, insert_cover);
+	INSERT INTO track (title, artist_id, album_id, path, track_number, cover, duration)
+	VALUES (insert_track, artist_check, album_check, insert_path, insert_track_number, insert_cover, insert_duration);
 END IF;
 
 END;

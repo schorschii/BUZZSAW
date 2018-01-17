@@ -70,6 +70,11 @@
 			$FileInfo = $getID3->analyze($file);
 			getid3_lib::CopyTagsToComments($FileInfo);
 
+			// read playtime
+			$playtime = 0;
+			if (isset($FileInfo['playtime_seconds']))
+				$playtime = $FileInfo['playtime_seconds'];
+
 			// read artist
 			$artist = "Unknown Artist";
 			if (isset($FileInfo['comments_html']['artist'][0]))
@@ -111,14 +116,14 @@
 
 
 			// call insert/update sql procedure
-			$sql = "CALL InsertUpdateTrack(?, ?, ?, ?, ?, ?)";
+			$sql = "CALL InsertUpdateTrack(?, ?, ?, ?, ?, ?, ?)";
 			$statement = $mysqli->prepare($sql);
 			if (!$statement)
-				echo("<b>PREPARE FAILED:</b>&nbsp;$sql<br>".$mysqli->error."<br>");
-			if (!$statement->bind_param('ssssss', $title, $album, $artist, $file, $track_number, $cover))
-				echo("<b>BIND FAILED:</b>&nbsp;$file<br>$sql<br>");
+				echo("<b>PREPARE FAILED:</b>&nbsp;".$mysqli->error."<br>");
+			if (!$statement->bind_param('ssssssi', $title, $album, $artist, $file, $track_number, $cover, $playtime))
+				echo("<b>BIND FAILED:</b>&nbsp;$file<br>");
 			if (!$statement->execute())
-				echo("<b>EXEC FAILED:</b>&nbsp;$file<br>$sql<br>".$statement->error."<br>");
+				echo("<b>EXEC FAILED:</b>&nbsp;$file<br>".$statement->error."<br>");
 
 			flush(); ob_flush();
 			$counter ++;

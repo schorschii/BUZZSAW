@@ -52,8 +52,10 @@ if(IsAlreadyEstablished($mysqli)) {
 </head>
 <body>
 
+	<div id="loginlogocontainer">
+		<img id="loginlogo" src="img/buzzsaw.svg"></img>
+	</div>
 	<div id="logincontainer">
-		<img id="logo" src="img/buzzsaw.svg"></img>
 		<form method="POST" action="setup.php">
 			<h1>BUZZSAW</h1>
 			<h2>audio server</h2>

@@ -1,5 +1,7 @@
 - [new] new volume slider
 - [new] new library view: recently added
+- [new] scan.php saves track playtime
+- [fix] buzzsaw logo is now always centered, also on small displays
 
 v0.0.4
 - [new] scan.php finds correct next free cover image number for file name in music_thumb
