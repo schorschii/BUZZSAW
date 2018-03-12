@@ -39,11 +39,11 @@ if(!isset($view)) die("Access this page using library.php with the view paramete
 
 		echo "<div class='playlistOptions'>";
 		echo "<img class='cover_libraray unknown' src='img/currentplaylist.svg'><span class='playlist_title'>$playlistname</span>";
-		echo "<button id='btnRemovePlaylist' class='roundButton roundButtonSmall btnRemove right btnMarginLeft btnPadding' onclick='removePlaylist(" . $_GET['playlist'] . ");' title='Remove this playlist'>Playlist</button>";
+		echo "<button id='btnRemovePlaylist' class='roundButton roundButtonSmall btnTrash right btnMarginLeft' onclick='removePlaylist(" . $_GET['playlist'] . ");' title='Remove this playlist'></button>";
 		echo "<button id='btnMoveTrackDown' class='roundButton roundButtonSmall btnMoveDown right btnMarginLeft' onclick='ajaxRequest(\"content\",\"library.php?view=playlist_content&playlist=" . $mysqli->real_escape_string($_GET['playlist']) . "&action=movedown\");' title='Move track(s) down in playlist'></button>";
 		echo "<button id='btnMoveTrackUp' class='roundButton roundButtonSmall btnMoveUp right btnMarginLeft' onclick='ajaxRequest(\"content\",\"library.php?view=playlist_content&playlist=" . $mysqli->real_escape_string($_GET['playlist']) . "&action=moveup\");' title='Move track(s) up in playlist'></button>";
 		echo "<button id='btnRemovePlaylistTrack' class='roundButton roundButtonSmall btnRemove right btnMarginLeft' onclick='ajaxRequest(\"content\",\"library.php?view=playlist_content&playlist=" . $mysqli->real_escape_string($_GET['playlist']) . "&action=remove\");' title='Remove track(s) from playlist'></button>";
-		echo "<button id='btnAddTrack' class='roundButton roundButtonSmall btnAdd right btnMarginLeft' onclick='ajaxRequest(\"content\",\"library.php?view=track&addtoplaylist=" . $mysqli->real_escape_string($_GET['playlist']) . "\");' title='Add track(s) to playlist'></button>";
+		echo "<button id='btnAddTrack' class='roundButton roundButtonSmall btnAdd right btnMarginLeft' onclick='ajaxRequest(\"content\",\"library.php?view=artist&addtoplaylist=" . $mysqli->real_escape_string($_GET['playlist']) . "\");' title='Add track(s) to playlist'></button>";
 		echo "</div><br>";
 		$action = "";
 		if(isset($_GET['action'])) {

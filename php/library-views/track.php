@@ -10,6 +10,9 @@ if(!isset($view)) die("Access this page using library.php with the view paramete
 		$class = "";
 		$showshorttitle = true;
 		$albumfilter = "ORDER BY title ASC";
+		if (isset($_GET['genre'])) {
+			$albumfilter = "WHERE tr.genre = '" . $mysqli->real_escape_string($_GET['genre']) . "' ORDER BY title ASC";
+		}
 		if (isset($_GET['album'])) {
 			$class = "tracklisting";
 			$showshorttitle = false;
@@ -88,7 +91,7 @@ if(!isset($view)) die("Access this page using library.php with the view paramete
 
 			$title = $row->title . "\n" . $row->album_title . "\n" . $row->artist_title;
 
-			echo "<li class='$class'><a $linkaction title='$title'>" . $track_number . $shorttitle . "</a></li>";
+			echo "<li class='$class'><a $linkaction oncontextmenu='return openContextMenu(".$row->id.")' title='".htmlspecialchars($title,ENT_QUOTES)."'>" . $track_number . $shorttitle . "</a></li>";
 		}
 
 ?>

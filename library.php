@@ -18,6 +18,26 @@
 ?>
 
 <div id="containerContainer">
+	<!-- Context Menu -->
+	<div id="libraryContextMenu" style="display:none;">
+		<div>
+			<select id="libraryContextMenuAddToPlaylist" onchange="addToPlaylist(this.value)">
+				<option value="-1" selected disabled>Add to playlist</option>
+				<?php
+				require_once('database.php');
+				$sql = "SELECT * FROM playlist";
+				$result = $mysqli->query($sql);
+				while($row = $result->fetch_object()) {
+					echo "<option value=".$row->id.">".$row->title."</option>";
+				}
+				?>
+			</select>
+		</div>
+		<div>
+			<button onclick="closeContextMenu()">Close</button>
+		</div>
+	</div>
+	<!-- End Context Menu -->
 	<table id="libraryViewModeBar" cellspacing="0">
 		<tr>
 			<td>
@@ -46,8 +66,8 @@
 				</a>
 			</td>
 			<td>
-				<a href='#' onclick="ajaxRequest('content','library.php?view=recentlyadded');" class="<?php $imgadd=""; if ($view =='recentlyadded') { echo 'active'; $imgadd="_b"; } ?>">
-					<img src="img/recent<?php echo $imgadd; ?>.svg" height="30"><br>Recent
+				<a href='#' onclick="ajaxRequest('content','library.php?view=more');" class="<?php $imgadd=""; if ($view =='more') { echo 'active'; $imgadd="_b"; } ?>">
+					<img src="img/more<?php echo $imgadd; ?>.svg" height="30"><br>More
 				</a>
 			</td>
 			<td>

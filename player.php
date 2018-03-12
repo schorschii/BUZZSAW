@@ -1,6 +1,7 @@
 <?php
 
 require_once('session.php');
+require_once('global.php');
 
 
 $currentURL = "";
@@ -63,7 +64,6 @@ if (isset($_GET['track'])) {
 		switch ($_GET['currentplaylist']) {
 			case "dir":
 				if (isset($_GET['track']) && file_exists($_GET['track'])) {
-					require_once('global.php');
 					$counter = 1;
 					foreach(scandir(dirname($_GET['track'])) as $file) {
 						if ($file == "." || $file == "..") continue;
@@ -294,11 +294,26 @@ function createCurrentPlaylistEntry($track_number, $title, $artist, $album, $pat
 			<table class="inputtbl">
 				<tr>
 					<th><img src='img/down.svg'><span>Download</span></th>
+					<th><img src='img/play_small.svg'><span>Play Mode</span></th>
 					<th><img src='img/visualizer.svg'><span>Visualizer</span></th>
 					<th><img src='img/remote.svg'><span>Remote Player</span></th>
 				</tr>
 				<tr>
-					<td><button id='btnDownloadTrack' class='btnPadding' onclick='download(obj("mainPlayer").src + "&download=true");' title='Download the current track'>Current Track</button></td>
+					<td>
+						<?php if(ALLOW_DOWNLOADS) { ?>
+						<button id='btnDownloadTrack' class='btnPadding' onclick='download(obj("mainPlayer").src + "&download=true");' title='Download the current track'>Current Track</button>
+						<?php } else { ?>
+						<button id='btnDownloadTrack' class='btnPadding' disabled='true'>Not allowed</button>
+						<?php } ?>
+					</td>
+					<td>
+						<select id="playModeSwitcher" class='right btnMarginLeft' onchange="setPlayMode(this.value);">
+							<option value="0">Repeat Current Playlist</option>
+							<option value="1">Repeat Current Track</option>
+							<option value="2">Do Not Repeat</option>
+							<option value="3">Shuffle</option>
+						</select>
+					</td>
 					<td>
 						<select id="visualizerSwitcher" class='right btnMarginLeft' onchange="setVisualizer(this.value);">
 							<?php

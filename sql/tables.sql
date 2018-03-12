@@ -101,7 +101,23 @@ CREATE TABLE `track` (
   `track_number` int(11) DEFAULT NULL,
   `duration` int(11) DEFAULT NULL,
   `cover` text CHARACTER SET utf8,
+  `length` bigint(20) DEFAULT NULL,
+  `genre` text CHARACTER SET utf8 NOT NULL,
   `inserted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `download`
+--
+
+CREATE TABLE `download` (
+  `id` int(11) NOT NULL,
+  `track_id` int(11) NOT NULL,
+  `user` int(11) DEFAULT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `client` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -163,6 +179,13 @@ ALTER TABLE `track`
   ADD KEY `artist_id_2` (`artist_id`);
 
 --
+-- Indizes für die Tabelle `download`
+--
+ALTER TABLE `download`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `track_id` (`track_id`);
+
+--
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
@@ -200,12 +223,18 @@ ALTER TABLE `remote`
 -- AUTO_INCREMENT für Tabelle `setting`
 --
 ALTER TABLE `setting`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT für Tabelle `track`
 --
 ALTER TABLE `track`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
+-- AUTO_INCREMENT für Tabelle `download`
+--
+ALTER TABLE `download`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
 --
 -- Constraints der exportierten Tabellen
 --
@@ -229,6 +258,12 @@ ALTER TABLE `playlist_track`
 ALTER TABLE `track`
   ADD CONSTRAINT `fk_album` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_artist` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `download`
+--
+ALTER TABLE `download`
+  ADD CONSTRAINT `fk_download_track` FOREIGN KEY (`track_id`) REFERENCES `track` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 
 INSERT INTO `setting` (`id`, `identifier`, `value`) VALUES

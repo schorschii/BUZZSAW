@@ -1,28 +1,22 @@
-|                B U Z Z S A W                |
-|:-------------------------------------------:|
-| html multimedia server - library and player |
-|   (c) 2017 Georg Sieber - georg-sieber.de   |
-
-| License: GPLv2 (see LICENSE.txt)            |
-|:-------------------------------------------:|
-| View source and fork me on GitHub:          |
-| https://github.com/schorschii/buzzsaw       |
+# B U Z Z S A W
+Your private music streaming cloud  
+html multimedia server - library and player  
 
 
-# 1. About
+# About
 BUZZSAW is a web application for playing music and videos and
 organizing them in a library. It is designed to listen your music
 anywhere, without syncing your mobile devices. It is written in
-html (who'd have thought?), PHP, JS and CSS.
+html (who'd have thought?), PHP, JS and CSS.  
 
-## Highlights:
+## Highlights
   - playlists
   - audio visualization
   - showing id3 tags and cover images from file
   - remote player functionality
   - optimized for mobile devices
 
-## Screenshots:
+## Screenshots
 ![Player with visualization](https://raw.githubusercontent.com/schorschii/buzzsaw/master/img/screenshot/1_player.png)
 ![Library: Artists](https://raw.githubusercontent.com/schorschii/buzzsaw/master/img/screenshot/2_artists.png)
 ![Library: Albums](https://raw.githubusercontent.com/schorschii/buzzsaw/master/img/screenshot/3_albums.png)
@@ -30,7 +24,7 @@ html (who'd have thought?), PHP, JS and CSS.
 ![Current playlists and options](https://raw.githubusercontent.com/schorschii/buzzsaw/master/img/screenshot/5_current.png)
 
 
-# 2. Requirements
+# Requirements
 BUZZSAW was tested with the following software environment. Please
 note that there will be no support for other environments!
 
@@ -39,13 +33,12 @@ note that there will be no support for other environments!
   - Apache 2
   - PHP 5 (only with "mysqlnd" package) or 7
   - MySQL or MariaDB
-  - fast connection to the client;
-    best experience if client is running on the same machine
+  - fast connection to the client; best experience if client is running on the same machine
 
 ## Client (desktop)
-  - Google Chrome v60+
-    or other webkit based browsers
-	not tested with Safari
+  - Google Chrome v60+  
+    or other webkit based browsers  
+    not tested with Safari
   - Mozilla Firefox v55+
   - NOT running in IE
 
@@ -55,14 +48,14 @@ note that there will be no support for other environments!
     with some limitations
 
 
-# 3. Installation
+# Installation
 
 ## Upgrade from old version
 1. Delete all files from the buzzsaw directory, except: "database.php", "music" and "music_thumb" directory.
 2. Copy all files from this archive to your buzzsaw directory, again except "database.php", "music" and "music_thumb" directory.
 3. That's it. If you encounter some problems, clear your browser cache and/or execute file scan again (Menu -> "Options" -> "Scan filesystem").
 
-## Setup up a new BUZZSAW installation
+## Setup up a new installation
 1. Setup up a web server with PHP interpreter and a mysql server.
 
    For Debian <= 8 or current Raspian
@@ -84,8 +77,10 @@ note that there will be no support for other environments!
 Enjoy your music! :-)
 
 
-# 4. License
-GNU General Public License - see LICENSE.txt
+# License
+GNU General Public License - see LICENSE.txt  
+&copy; 2017-2018 Georg Sieber - [georg-sieber.de][1]  
+view source and fork me on [GitHub][2]
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -103,18 +98,20 @@ Free Software Foundation, Inc.
 59 Temple Place - Suite 330
 Boston, MA  02111-1307, USA.
 
+[1]: [https://georg-sieber.de]
+[2]: [https://github.com/schorschii/buzzsaw]
 
-# 5. Libraries
-This program uses the getid3() library v1.9.14  
+# Libraries
+This program uses the [getid3()][3] library v1.9.14  
 © 2017 James Heinrich  
 Licensed under the terms of the GPLv2
 
-
-# 6. Support
-Found a bug? Great!  
-Please report it (preferably with a ready-to-use fix for it ;-) ) on GitHub.
-Questions, ideas and feature requests are also welcome.
+[3]: [http://getid3.sourceforge.net]
 
 
-# 7. ToDo and planned features
+# Support
+Found a bug? Great! Please report it (preferably with a ready-to-use fix for it ;-) ) on GitHub. Questions, ideas and feature requests are also welcome.
+
+
+# ToDo and planned features
 Visit the GitHub page for more information.

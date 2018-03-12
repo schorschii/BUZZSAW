@@ -15,6 +15,7 @@ var mobileHeight = 500;
 var isVolumeOpen = false;
 var isMenuOpen = false;
 var isCurrentPlaylistOpen = false;
+var playMode = 0;
 
 /* toggleMenu()
    toggleCurrentPlaylist()
@@ -96,6 +97,12 @@ function toggleFullscreen(elem) {
 		else if (document.webkitExitFullscreen)
 			document.webkitExitFullscreen();
 	}
+}
+
+/* setPlayMode()
+   set the play mode */
+function setPlayMode(newPlayMode) {
+	playMode = newPlayMode;
 }
 
 /* refreshPlayPauseButton()
@@ -219,7 +226,6 @@ function thisindex(elm)
 
 var current = 0;
 function initPlaylist(initialTrackNumber) {
-
 	current = initialTrackNumber;
 	var tracks = obj('playlist').getElementsByClassName('track');
 	var index;
@@ -237,18 +243,39 @@ function initPlaylist(initialTrackNumber) {
 }
 function nextTrack(forward) {
 	var tracks = playlist.getElementsByClassName('track');
-	var len = tracks.length - 1;
+	var len = tracks.length;
 
-	if (forward) current++;
-	else current--;
-
-	if(current == len+1){
-		current = 0;
-		link = tracks[0];
-	} else {
-		link = tracks[current];
+	if (playMode == 3) {
+		current = Math.floor((Math.random() * len) + 0);
+	} else if (playMode != 1) {
+		// count up/down if play mode is not "repeat single track"
+		if (forward) current++;
+		else current--;
 	}
-	runPlaylist(link, "");
+
+	if(playMode == 1) {
+		// play same track again
+		link = tracks[current];
+		runPlaylist(link, "");
+	} else if(current < 0) {
+		// first track and prev clicked, jump to last track in playlist
+		link = tracks[len-1];
+		runPlaylist(link, "");
+	} else if(current == len && playMode == 0) {
+		// end of current playlist, jump to first element
+		current = 0;
+		link = tracks[current];
+		runPlaylist(link, "");
+	} else if(current == len && playMode == 2) {
+		// end of playlist, do not repeat playlist
+		current--;
+		player.pause();
+		player.currentTime = 0;
+	} else {
+		// jump to next element in playlist
+		link = tracks[current];
+		runPlaylist(link, "");
+	}
 }
 var isVideo = false;
 function setVideoStyle(playerobjid) {
@@ -294,7 +321,13 @@ function runPlaylist(link, playerobjid) {
 	// set new track id
 	currentTrackId = link.getAttribute('titleID');
 	// set new url
-	window.history.pushState({}, null, 'player.php?currentplaylist=album&track='+link.getAttribute('titleID'));
+	let newURL = "player.php" + "?";
+	let newURLparams = [];
+	newURLparams.push(getQueryVariable("currentplaylist"));
+	newURLparams.push(getQueryVariable("playlist"));
+	newURLparams.push("track="+link.getAttribute('titleID'));
+	newURL += newURLparams.join("&");
+	window.history.pushState({}, null, newURL);
 
 	// highlight new track in current playlist by setting style class
 	var tracks = playlist.getElementsByClassName('track');
@@ -312,6 +345,17 @@ function runPlaylist(link, playerobjid) {
 	// if remote player is set, refresh current state
 	if(remotePlayerId != -1)
 		ajaxRequest('dummy', 'remoteplayer.php?set='+remotePlayerId+'&track='+link.getAttribute('titleID'), '');
+}
+function getQueryVariable(variable) {
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) {
+		var pair = vars[i].split("=");
+		if (pair[0] == variable) {
+			return vars[i];
+		}
+	}
+	return "";
 }
 
 /* fadeAudioOut(audioObjId, pause)

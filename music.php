@@ -1,6 +1,8 @@
 <?php
 
+require_once('global.php');
 set_time_limit ( 10 );
+
 
 /* Source https://gist.github.com/kosinix/4cf0d432638817888149 */
 class ResumeDownload {
@@ -140,7 +142,8 @@ if(isset($_GET['track'])) {
 
 	// otherwise search db for file path by track id
 	require_once('database.php');
-	$sql = "SELECT tr.title AS 'title', "
+	$sql = "SELECT tr.id AS 'id', "
+	     . "tr.title AS 'title', "
 	     . "tr.path AS 'path', "
 	     . "tr.track_number AS 'track_number', "
 	     . "al.title AS 'album', "
@@ -158,8 +161,19 @@ if(isset($_GET['track'])) {
 
 	while($row = $result->fetch_object()) {
 		$filename = $row->artist . " - " . $row->title . "." . pathinfo($row->path, PATHINFO_EXTENSION);
-		if(isset($_GET['download']) && $_GET['download'] != "")
+		if(isset($_GET['download']) && $_GET['download'] != "") {
+			if(!ALLOW_DOWNLOADS) {
+				header('HTTP/1.1 401 Forbidden');
+				die('Download not allowed');
+			}
 			header("Content-Disposition: attachment; filename='$filename'");
+			if(LOG_DOWNLOADS) {
+				$sql = "INSERT INTO download (track_id, client) VALUES (?, ?)";
+				$statement2 = $mysqli->prepare($sql);
+				$statement2->bind_param('is', $row->id, $_SERVER['REMOTE_ADDR']);
+				$statement2->execute();
+			}
+		}
 		#readfile($row->path);
 
 		try {

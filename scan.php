@@ -30,7 +30,7 @@
 
 	require_once('database.php');
 	$THUMB_DIR = "music_thumb";
-	$MUSIC_DIR = "music";
+	$MUSIC_DIR = MEDIAROOT;
 
 	// remove old db entries and album cover thumbnails
 	if(isset($_GET['rescan']) && $_GET['rescan'] == 1) {
@@ -70,10 +70,19 @@
 			$FileInfo = $getID3->analyze($file);
 			getid3_lib::CopyTagsToComments($FileInfo);
 
+			// get file length
+			$filelength = 0;
+			$filelength = filesize($file);
+
 			// read playtime
 			$playtime = 0;
 			if (isset($FileInfo['playtime_seconds']))
 				$playtime = $FileInfo['playtime_seconds'];
+
+			// read genre
+			$genre = null;
+			if (isset($FileInfo['comments_html']['genre'][0]))
+				$genre = $FileInfo['comments_html']['genre'][0];
 
 			// read artist
 			$artist = "Unknown Artist";
@@ -114,19 +123,33 @@
 				$cover = $filename;
 			}
 
-
 			// call insert/update sql procedure
-			$sql = "CALL InsertUpdateTrack(?, ?, ?, ?, ?, ?, ?)";
+			$sql = "CALL InsertUpdateTrack(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			$statement = $mysqli->prepare($sql);
 			if (!$statement)
 				echo("<b>PREPARE FAILED:</b>&nbsp;".$mysqli->error."<br>");
-			if (!$statement->bind_param('ssssssi', $title, $album, $artist, $file, $track_number, $cover, $playtime))
+			if (!$statement->bind_param('ssssssiis', $title, $album, $artist, $file, $track_number, $cover, $playtime, $filelength, $genre))
 				echo("<b>BIND FAILED:</b>&nbsp;$file<br>");
 			if (!$statement->execute())
 				echo("<b>EXEC FAILED:</b>&nbsp;$file<br>".$statement->error."<br>");
 
 			flush(); ob_flush();
 			$counter ++;
+		}
+	}
+
+	// clean removed tracks
+	$sql = "SELECT * FROM track";
+	$statement = $mysqli->prepare($sql);
+	$statement->execute();
+	$result = $statement->get_result();
+	while($row = $result->fetch_object()) {
+		if(!file_exists($row->path)) {
+			$id = $row->id;
+			$sql = "DELETE FROM track WHERE id = ?";
+			$statement = $mysqli->prepare($sql);
+			$statement->bind_param('i', $id);
+			$statement->execute();
 		}
 	}
 

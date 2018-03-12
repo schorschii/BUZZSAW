@@ -200,6 +200,15 @@ p:last-child {
 	color: red;
 }
 
+table.statistics th {
+	text-align: left;
+	padding-right: 10px;
+}
+table.statistics tr > * {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
 .right {
 	float: right;
 }
@@ -216,6 +225,12 @@ p:last-child {
 }
 .btnRemove {
 	background-image: url('../img/minus.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+.btnTrash {
+	background-image: url('../img/trash.svg');
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
@@ -238,4 +253,17 @@ p:last-child {
 	padding-left: 50px;
 	padding-right: 10px;
 	width: auto;
+}
+
+#libraryContextMenu {
+	position: fixed;
+	background-color: rgb(40,40,40);
+	border-radius: 2px;
+	padding: 10px;
+	z-index: 1000;
+	box-shadow: 0px 0px 20px black;
+}
+#libraryContextMenu > div {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }

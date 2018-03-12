@@ -1,9 +1,22 @@
 <?php
 
+// ------------------------------
+// flags
+const MEDIAROOT = "music";
+const ALLOW_DOWNLOADS = true;
+const LOG_DOWNLOADS = true;
+// ------------------------------
+
+function is_sub_dir($path, $parent_folder) {
+	#echo "$path | ".realpath($path)."<br>"; // debug
+	#echo "$parent_folder | ".realpath($parent_folder)."<br>"; // debug
+	$path = realpath($path);
+	$parent_folder = realpath($parent_folder);
+	return (startsWith($path, $parent_folder));
+}
+
 $CVERSION = trim(file_get_contents("CURRENTVERSION.txt"));
 $NVERSION = "";
-
-
 function isUpdateAvail() {
 	global $CVERSION;
 	global $NVERSION;
@@ -57,6 +70,16 @@ function isAudioFile($filename) {
 function shortText($longtext) {
 	$maxlength = 21;
 	return strlen($longtext) > $maxlength ? substr($longtext,0,$maxlength)."..." : $longtext;
+}
+
+function startsWith($haystack, $needle) {
+	$length = strlen($needle);
+	return (substr($haystack, 0, $length) === $needle);
+}
+
+function endsWith($haystack, $needle) {
+	$length = strlen($needle);
+	return $length === 0 || (substr($haystack, -$length) === $needle);
 }
 
 ?>

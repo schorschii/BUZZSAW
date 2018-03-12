@@ -1,7 +1,13 @@
+v0.0.5
+- [new] play mode: repeat playlist, repeat track, do not repeat
+- [fix] correct escaping of quotes in html's "title" attribute
+- [new] statistics
 - [new] new volume slider
 - [new] new library view: recently added
-- [new] scan.php saves track playtime
-- [fix] buzzsaw logo is now always centered, also on small displays
+- [new] scan.php now removes deleted tracks from the database
+- [new] scan.php now scans file size and genre
+- [fix] "files" library view is now limited to the media root dir, so that the user can't view other files on the system
+- [new] you can now disable the download-feature by setting the flag in global.php
 
 v0.0.4
 - [new] scan.php finds correct next free cover image number for file name in music_thumb

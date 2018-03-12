@@ -52,7 +52,7 @@ if(!isset($view)) die("Access this page using library.php with the view paramete
 			$title = $row->title . "\n" . $row->artist_title;
 
 			echo "<li>";
-			echo "<a href='#' onclick='ajaxRequest(\"content\",\"library.php?view=track&album=" . $row->id . "$addtoplaylistparameter\");' title='$title'>";
+			echo "<a href='#' onclick='ajaxRequest(\"content\",\"library.php?view=track&album=" . $row->id . "$addtoplaylistparameter\");' title='".htmlspecialchars($title,ENT_QUOTES)."'>";
 			echo "<img class='$cover_class' src='$cover'>";
 			echo shortText($row->title);
 			echo "</a>";

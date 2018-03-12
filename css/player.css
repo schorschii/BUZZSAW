@@ -404,8 +404,14 @@ input[type=range]#volumeBar::-webkit-slider-thumb {
 	width: 20px; height: 20px;
 }
 /* for mozilla browser */
+@-moz-document url-prefix() {
+	input[type=range]#volumeBar {
+		margin: 8px 8px 8px 8px;
+		height: 25px;
+	}
+}
 input[type=range]#volumeBar::-moz-range-thumb {
-	width: 20px; height: 20px;
+	width: 18px; height: 18px;
 }
 
 

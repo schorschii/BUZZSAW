@@ -7,11 +7,15 @@ if(!isset($view)) die("Access this page using library.php with the view paramete
 <?php
 
 	require_once('global.php');
-	$searchpath = "music";
-	if(isset($_GET['searchpath'])) $searchpath = $_GET['searchpath'];
+	$searchpath = MEDIAROOT;
+	if(isset($_GET['searchpath']) && is_sub_dir($_GET['searchpath'], $searchpath)) {
+		$searchpath = $_GET['searchpath'];
+	}
+		
 
 		foreach(scandir($searchpath) as $file) {
-			if($file == ".") continue;
+			if($file === ".") continue;
+			if($file === ".." && realpath($searchpath) === realpath(MEDIAROOT)) continue;
 
 			$linkaction = "";
 			$imgsrc = "";

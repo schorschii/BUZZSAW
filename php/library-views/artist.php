@@ -29,7 +29,7 @@ if(!isset($view)) die("Access this page using library.php with the view paramete
 			}
 
 			echo "<li>";
-			echo "<a href='#' id='element_" . $row->id . "' $linkaction title='" . $row->title . "'>";
+			echo "<a href='#' id='element_" . $row->id . "' $linkaction title='" . htmlspecialchars($row->title,ENT_QUOTES) . "'>";
 			echo "<img class='$cover_class' src='" . $cover . "'>";
 			echo shortText($row->title);
 			echo "</a>";
